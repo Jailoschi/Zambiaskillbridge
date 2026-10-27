@@ -70,8 +70,8 @@ class HomeShell extends ConsumerWidget {
                                 i == shell.currentIndex ? items[i].$2 : items[i].$1,
                                 size: 23,
                                 color: i == shell.currentIndex
-                                    ? const Color(0xFF2870D3)
-                                    : const Color(0xFF8792A2),
+                                    ? SB.navy
+                                    : SB.text2,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -86,7 +86,7 @@ class HomeShell extends ConsumerWidget {
                                     ? FontWeight.w700
                                     : FontWeight.w500,
                                 color: i == shell.currentIndex
-                                    ? const Color(0xFF2870D3)
+                                    ? SB.navy
                                     : SB.text2,
                               ),
                             ),

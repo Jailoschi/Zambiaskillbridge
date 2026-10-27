@@ -221,7 +221,7 @@ class Avatar extends ConsumerWidget {
     );
     if (photoPath != null) {
       return ClipOval(
-        child: Image.file(File(photoPath!), width: size, height: size, fit: BoxFit.cover, errorBuilder: (_, __, ___) => fallback),
+        child: Image.file(File(photoPath!), width: size, height: size, fit: BoxFit.cover, errorBuilder: (_, _, _) => fallback),
       );
     }
     final key = name.trim().toLowerCase();
@@ -251,7 +251,7 @@ class TradeImage extends StatelessWidget {
         fit: fit,
         width: double.infinity,
         height: double.infinity,
-        errorBuilder: (_, __, ___) => Container(color: tradeColor(tradeId).withValues(alpha: .13), alignment: Alignment.center, child: Icon(tradeById(tradeId).icon, size: 34, color: tradeColor(tradeId))),
+        errorBuilder: (_, _, _) => Container(color: tradeColor(tradeId).withValues(alpha: .13), alignment: Alignment.center, child: Icon(tradeById(tradeId).icon, size: 34, color: tradeColor(tradeId))),
       );
 }
 
@@ -265,7 +265,7 @@ class PortfolioImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ph = TradeImage(tradeId, fit: fit);
     if (path == null) return ph;
-    return Image.file(File(path!), fit: fit, width: double.infinity, height: double.infinity, errorBuilder: (_, __, ___) => ph);
+    return Image.file(File(path!), fit: fit, width: double.infinity, height: double.infinity, errorBuilder: (_, _, _) => ph);
   }
 }
 
@@ -708,7 +708,7 @@ class AppPhoto extends StatelessWidget {
         fit: fit,
         width: double.infinity,
         height: double.infinity,
-        errorBuilder: (_, __, ___) => TradeImage(fallbackTradeId, fit: fit),
+        errorBuilder: (_, _, _) => TradeImage(fallbackTradeId, fit: fit),
       );
 }
 
@@ -721,7 +721,7 @@ class WorkerPhoto extends StatelessWidget {
   Widget build(BuildContext context) {
     final fallback = TradeImage(w.tradeId);
     if (w.photoPath != null) {
-      return Image.file(File(w.photoPath!), fit: BoxFit.cover, width: double.infinity, height: double.infinity, errorBuilder: (_, __, ___) => fallback);
+      return Image.file(File(w.photoPath!), fit: BoxFit.cover, width: double.infinity, height: double.infinity, errorBuilder: (_, _, _) => fallback);
     }
     final i = kTrades.indexWhere((t) => t.id == w.tradeId);
     final n = (i < 0 ? 0 : i % 12) + 1;

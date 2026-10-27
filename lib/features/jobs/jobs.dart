@@ -491,7 +491,7 @@ class JobDetailScreen extends ConsumerWidget {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: job.photoPaths.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
               itemBuilder: (_, i) => ClipRRect(borderRadius: BorderRadius.circular(12), child: SizedBox(width: 110, child: PortfolioImage(path: job.photoPaths[i], tradeId: job.tradeId))),
             ),
           ),

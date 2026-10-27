@@ -118,6 +118,12 @@ class AppState {
 
   UserRole get role => user?.role ?? chosenRole ?? UserRole.client;
   bool get isWorker => role == UserRole.worker;
+
+  /// Where the splash screen sends the user next.
+  String get initialRouteAfterSplash {
+    if (user != null) return '/home';
+    return onboarded ? '/role' : '/intro';
+  }
   String get myWorkerId => (user?.isDemo ?? false) ? kDefaultDemoWorkerId : kMyWorkerId;
   String get myClientId => (user?.isDemo ?? false) ? kDemoClientId : (user?.id ?? kDemoClientId);
   String get myClientName => (user?.isDemo ?? false) ? kDemoClientName : (user?.name ?? 'Client');
@@ -329,11 +335,18 @@ class AppController extends Notifier<AppState> {
   }
 
   /// Returns an error message, or null when the account was created.
-  String? register({required String name, required String phone, String email = ''}) {
+  String? register({
+    required String name,
+    required String phone,
+    String email = '',
+    required String password,
+  }) {
     final auth = ref.read(authRepoProvider);
+    final passwordError = auth.validatePassword(password);
+    if (passwordError != null) return passwordError;
     final existing = auth.findAccount(state.accounts, phone) ?? (email.isEmpty ? null : auth.findAccount(state.accounts, email));
     if (existing != null) return 'An account with these details already exists on this device. Try signing in.';
-    final u = auth.createAccount(name: name, phone: phone, email: email, role: state.chosenRole ?? UserRole.client);
+    final u = auth.createAccount(name: name, phone: phone, email: email, role: state.chosenRole ?? UserRole.client, password: password);
     final accounts = [...state.accounts, u];
     state = state.copyWith(accounts: accounts, user: u, onboarded: true);
     _s.writeList(_kAccounts, accounts.map((e) => e.toJson()).toList());
@@ -342,9 +355,13 @@ class AppController extends Notifier<AppState> {
     return null;
   }
 
-  String? signIn(String identifier) {
-    final u = ref.read(authRepoProvider).findAccount(state.accounts, identifier);
+  String? signIn(String identifier, String password) {
+    final auth = ref.read(authRepoProvider);
+    final u = auth.findAccount(state.accounts, identifier);
     if (u == null) return 'No account found for that phone number or email on this device. Create an account first.';
+    if (auth.authenticate(state.accounts, identifier, password) == null) {
+      return 'That password is not correct. Please try again.';
+    }
     state = state.copyWith(user: u, chosenRole: u.role, onboarded: true);
     _s.setBool(_kOnboarded, true);
     _s.setString(_kChosenRole, u.role.name);

@@ -6,6 +6,14 @@ import 'package:flutter/material.dart';
 
 enum UserRole { worker, client }
 
+extension UserRoleCopy on UserRole {
+  String get label => this == UserRole.worker ? 'Skilled Worker' : 'Client';
+
+  String get description => this == UserRole.worker
+      ? 'Showcase your skills, win jobs and grow your reputation.'
+      : 'Discover trusted workers and hire the right skills fast.';
+}
+
 enum PricingType { hourly, daily, fixedQuote, negotiable }
 
 enum JobUrgency { flexible, soon, urgent }
@@ -208,6 +216,10 @@ class AppUser {
   final String email;
   final UserRole role;
   final bool isDemo;
+
+  /// Salted SHA-256 of the account password. Empty for demo accounts, which
+  /// never have a password. Passwords themselves are never stored.
+  final String passwordHash;
   final String? photoPath;
   const AppUser({
     required this.id,
@@ -216,12 +228,24 @@ class AppUser {
     this.email = '',
     required this.role,
     this.isDemo = false,
+    this.passwordHash = '',
     this.photoPath,
   });
+
+  String get fullName => name;
 
   String get firstName {
     final parts = name.trim().split(RegExp(r'\s+'));
     return parts.isEmpty || parts.first.isEmpty ? 'there' : parts.first;
+  }
+
+  String get initials {
+    final parts =
+        name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+    if (parts.isEmpty) return '?';
+    if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
+    return (parts.first.substring(0, 1) + parts.last.substring(0, 1))
+        .toUpperCase();
   }
 
   AppUser copyWith({
@@ -229,6 +253,7 @@ class AppUser {
     String? phone,
     String? email,
     UserRole? role,
+    String? passwordHash,
     String? photoPath,
   }) =>
       AppUser(
@@ -238,6 +263,7 @@ class AppUser {
         email: email ?? this.email,
         role: role ?? this.role,
         isDemo: isDemo,
+        passwordHash: passwordHash ?? this.passwordHash,
         photoPath: photoPath ?? this.photoPath,
       );
 
@@ -248,6 +274,7 @@ class AppUser {
         'email': email,
         'role': role.name,
         'isDemo': isDemo,
+        'passwordHash': passwordHash,
         'photoPath': photoPath,
       };
 
@@ -258,6 +285,7 @@ class AppUser {
         email: j['email'] as String? ?? '',
         role: enumFrom(UserRole.values, j['role'], UserRole.client),
         isDemo: j['isDemo'] as bool? ?? false,
+        passwordHash: j['passwordHash'] as String? ?? '',
         photoPath: j['photoPath'] as String?,
       );
 }

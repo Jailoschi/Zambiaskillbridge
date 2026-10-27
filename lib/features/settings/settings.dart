@@ -120,7 +120,7 @@ class ProfileScreen extends ConsumerWidget {
           final ok = await confirmDialog(context, title: 'Sign out?', message: 'Your data stays on this phone.', confirmLabel: 'Sign out');
           if (!ok) return;
           ctl.signOut();
-          if (context.mounted) context.go('/auth');
+          if (context.mounted) context.go('/role');
         }),
       ]),
     );
@@ -251,7 +251,7 @@ class FavouritesScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Saved workers')),
       body: list.isEmpty
           ? EmptyState(icon: Icons.favorite_border, title: 'No saved workers yet', message: 'Tap the heart on a worker profile to keep them here.', actionLabel: 'Browse workers', onAction: () => context.go('/discover'))
-          : ListView.separated(padding: const EdgeInsets.fromLTRB(SB.pad, 8, SB.pad, 24), itemCount: list.length, separatorBuilder: (_, __) => const SizedBox(height: 10), itemBuilder: (_, i) => WorkerRowCard(list[i])),
+          : ListView.separated(padding: const EdgeInsets.fromLTRB(SB.pad, 8, SB.pad, 24), itemCount: list.length, separatorBuilder: (_, _) => const SizedBox(height: 10), itemBuilder: (_, i) => WorkerRowCard(list[i])),
     );
   }
 }

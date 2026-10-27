@@ -84,9 +84,9 @@ class _BrowseState extends ConsumerState<BrowseTradesScreen> {
 
   String _qs({String? trade, String? q}) {
     final p = <String, String>{
-      if (trade != null) 'trade': trade,
+      'trade': ?trade,
       if (q != null && q.isNotEmpty) 'q': q,
-      if (_town != null) 'town': _town!
+      'town': ?_town
     };
     return p.isEmpty
         ? '/search'
@@ -300,8 +300,9 @@ class _SearchState extends ConsumerState<SearchScreen> {
                       current: _q.town);
                   setState(() {
                     _q = _q.copyWith(town: t, clearTown: t == null);
-                    if (t == null && _q.sort == SortMode.nearestTown)
+                    if (t == null && _q.sort == SortMode.nearestTown) {
                       _q = _q.copyWith(sort: SortMode.bestMatch);
+                    }
                   });
                 }),
                 _chip(
@@ -385,7 +386,7 @@ class _SearchState extends ConsumerState<SearchScreen> {
               : ListView.separated(
                   padding: const EdgeInsets.fromLTRB(SB.pad, 4, SB.pad, 24),
                   itemCount: results.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  separatorBuilder: (_, _) => const SizedBox(height: 10),
                   itemBuilder: (_, i) => FadeSlideIn(
                       key: ValueKey(results[i].id),
                       index: i,

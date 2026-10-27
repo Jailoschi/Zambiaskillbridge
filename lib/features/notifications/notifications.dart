@@ -21,7 +21,7 @@ class NotificationsScreen extends ConsumerWidget {
           ? const EmptyState(icon: Icons.notifications_none, title: 'All caught up', message: 'Job matches, applications, bookings and reminders will appear here.')
           : ListView.separated(
               itemCount: items.length + 1,
-              separatorBuilder: (_, __) => const Divider(height: 1, indent: 72),
+              separatorBuilder: (_, _) => const Divider(height: 1, indent: 72),
               itemBuilder: (_, i) {
                 if (i == items.length) return const Padding(padding: EdgeInsets.all(SB.pad), child: Text('These are in-app notifications saved on this device. Push notifications from a server are not part of this prototype.', style: TextStyle(fontSize: 12, color: SB.text2)));
                 final n = items[i];

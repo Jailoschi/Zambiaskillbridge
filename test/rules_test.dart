@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zambia_skillbridge/core/constants/constants.dart';
-import 'package:zambia_skillbridge/core/utils/format.dart';
-import 'package:zambia_skillbridge/data/content/quizzes.dart';
-import 'package:zambia_skillbridge/data/demo/demo_data.dart';
-import 'package:zambia_skillbridge/data/repositories/repositories.dart';
-import 'package:zambia_skillbridge/data/repositories/rules.dart';
-import 'package:zambia_skillbridge/models/models.dart';
+import 'package:skillbridge/core/constants/constants.dart';
+import 'package:skillbridge/core/utils/format.dart';
+import 'package:skillbridge/data/content/quizzes.dart';
+import 'package:skillbridge/data/demo/demo_data.dart';
+import 'package:skillbridge/data/repositories/repositories.dart';
+import 'package:skillbridge/data/repositories/rules.dart';
+import 'package:skillbridge/models/models.dart';
 
 void main() {
   group('phone numbers', () {

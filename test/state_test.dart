@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:zambia_skillbridge/data/content/quizzes.dart';
-import 'package:zambia_skillbridge/data/local/local_store.dart';
-import 'package:zambia_skillbridge/models/models.dart';
-import 'package:zambia_skillbridge/state/app_state.dart';
+import 'package:skillbridge/data/content/quizzes.dart';
+import 'package:skillbridge/data/local/local_store.dart';
+import 'package:skillbridge/models/models.dart';
+import 'package:skillbridge/state/app_state.dart';
 
 Future<ProviderContainer> _container(SharedPreferences prefs) async {
   final c = ProviderContainer(overrides: [storeProvider.overrideWithValue(LocalStore(prefs))]);
@@ -86,16 +86,29 @@ void main() {
     expect(s.user, isNotNull);
   });
 
-  test('register rejects a repeated phone number and sign in finds the account', () async {
+  test('register rejects duplicates and sign in checks the password', () async {
     final prefs = await SharedPreferences.getInstance();
     final c = await _container(prefs);
     final ctl = c.read(appProvider.notifier);
     ctl.chooseRole(UserRole.client);
-    expect(ctl.register(name: 'Test User', phone: '+260971234567'), isNull);
+    expect(ctl.register(name: 'Test User', phone: '+260971234567', password: 'password123'), isNull);
     ctl.signOut();
-    expect(ctl.register(name: 'Other', phone: '+260971234567'), isNotNull);
-    expect(ctl.signIn('0971234567'), isNull);
-    expect(ctl.signIn('0961111111'), isNotNull);
+    expect(ctl.register(name: 'Other', phone: '+260971234567', password: 'password123'), isNotNull);
+    expect(ctl.signIn('0971234567', 'wrong-password'), isNotNull);
+    expect(ctl.signIn('0971234567', 'password123'), isNull);
+    expect(ctl.signIn('0961111111', 'password123'), isNotNull);
+  });
+
+  test('passwords are stored as salted hashes, never in plain text', () async {
+    final prefs = await SharedPreferences.getInstance();
+    final c = await _container(prefs);
+    final ctl = c.read(appProvider.notifier);
+    ctl.chooseRole(UserRole.worker);
+    expect(ctl.register(name: 'Test User', phone: '+260971234567', password: 'secret123'), isNull);
+    final account = c.read(appProvider).accounts.single;
+    expect(account.passwordHash, isNotEmpty);
+    expect(account.passwordHash.contains('secret123'), isFalse);
+    expect(prefs.getString('sb.accounts'), isNot(contains('secret123')));
   });
 
   test('clearing app data resets to seed data and signs the user out', () async {

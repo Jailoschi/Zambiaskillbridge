@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+
 import '../../core/constants/constants.dart';
 import '../../models/models.dart';
 import 'rules.dart';
@@ -197,16 +201,34 @@ class LocalWorkerSearchRepository implements WorkerSearchRepository {
 // Authentication (demo only)
 // ---------------------------------------------------------------------------
 
-/// Replace with a real, secure backend. The demo implementation never stores
-/// or checks a password. It only creates a local session record.
+/// Replace with a real, secure backend. This local implementation keeps only a
+/// salted SHA-256 hash of the password on the device, never the password
+/// itself, and checks it when signing in.
+/// A salted hash of [password] for [salt] (the account id). Plain passwords
+/// are never written to storage.
+String hashPassword(String password, String salt) =>
+    sha256.convert(utf8.encode('$salt::skillbridge::$password')).toString();
+
+bool verifyPassword(AppUser user, String password) {
+  if (user.isDemo) return true;
+  if (user.passwordHash.isEmpty) return false;
+  return hashPassword(password, user.id) == user.passwordHash;
+}
+
 abstract class AuthRepository {
   String? validatePassword(String password);
   AppUser? findAccount(List<AppUser> accounts, String identifier);
+  AppUser? authenticate(
+    List<AppUser> accounts,
+    String identifier,
+    String password,
+  );
   AppUser createAccount({
     required String name,
     required String phone,
     String email = '',
     required UserRole role,
+    required String password,
   });
   AppUser demoUser(UserRole role, {String? workerName});
 }
@@ -216,7 +238,7 @@ class DemoAuthRepository implements AuthRepository {
 
   @override
   String? validatePassword(String password) =>
-      password.length < 6 ? 'Use at least 6 characters.' : null;
+      password.length < 8 ? 'Use at least 8 characters.' : null;
 
   @override
   AppUser? findAccount(List<AppUser> accounts, String identifier) {
@@ -236,19 +258,35 @@ class DemoAuthRepository implements AuthRepository {
   }
 
   @override
+  AppUser? authenticate(
+    List<AppUser> accounts,
+    String identifier,
+    String password,
+  ) {
+    final user = findAccount(accounts, identifier);
+    if (user == null) return null;
+    if (!verifyPassword(user, password)) return null;
+    return user;
+  }
+
+  @override
   AppUser createAccount({
     required String name,
     required String phone,
     String email = '',
     required UserRole role,
-  }) =>
-      AppUser(
-        id: 'u_${DateTime.now().microsecondsSinceEpoch}',
-        name: name.trim(),
-        phone: phone,
-        email: email.trim(),
-        role: role,
-      );
+    required String password,
+  }) {
+    final id = 'u_${DateTime.now().microsecondsSinceEpoch}';
+    return AppUser(
+      id: id,
+      name: name.trim(),
+      phone: phone,
+      email: email.trim(),
+      role: role,
+      passwordHash: hashPassword(password, id),
+    );
+  }
 
   @override
   AppUser demoUser(UserRole role, {String? workerName}) => AppUser(

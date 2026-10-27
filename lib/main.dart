@@ -9,8 +9,10 @@ import 'state/app_state.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  runApp(ProviderScope(
-    overrides: [storeProvider.overrideWithValue(LocalStore(prefs))],
-    child: const SkillBridgeApp(),
-  ));
+  runApp(
+    ProviderScope(
+      overrides: [storeProvider.overrideWithValue(LocalStore(prefs))],
+      child: const SkillBridgeApp(),
+    ),
+  );
 }

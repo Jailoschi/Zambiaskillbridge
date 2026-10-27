@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/app_colors.dart';
 import '../../core/constants/constants.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/format.dart';
@@ -326,9 +327,9 @@ class _ClientHomeState extends ConsumerState<ClientHome> {
   int _page = 0;
 
   static const _banners = [
-    _Banner('Top rated plumbers this week', 'Reviewed by clients in Lusaka', 'See plumbers', 'plumbing', Color(0xFF2870D3), '/search?trade=plumbing'),
-    _Banner('Need a job done this week?', 'Post it and let workers come to you', 'Post a job', 'painting', Color(0xFF24364B), '/action'),
-    _Banner('Skilled welders on the Copperbelt', 'Kitwe and Ndola, ready to work', 'See welders', 'welding', Color(0xFF1F7A6B), '/search?trade=welding'),
+    _Banner('Top rated plumbers this week', 'Reviewed by clients in Lusaka', 'See plumbers', 'plumbing', SB.navy, '/search?trade=plumbing'),
+    _Banner('Need a job done this week?', 'Post it and let workers come to you', 'Post a job', 'painting', AppColors.navyDark, '/action'),
+    _Banner('Skilled welders on the Copperbelt', 'Kitwe and Ndola, ready to work', 'See welders', 'welding', Color(0xFF8A5A00), '/search?trade=welding'),
   ];
 
   @override
@@ -431,7 +432,7 @@ class _ClientHomeState extends ConsumerState<ClientHome> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: kTrades.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 14),
+              separatorBuilder: (_, _) => const SizedBox(width: 14),
               itemBuilder: (_, i) {
                 final t = kTrades[i];
                 return InkWell(
@@ -461,7 +462,7 @@ class _ClientHomeState extends ConsumerState<ClientHome> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: nearby.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (_, i) => _PhotoWorker(nearby[i]),
               ),
             ),
@@ -472,7 +473,7 @@ class _ClientHomeState extends ConsumerState<ClientHome> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: viewed.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (_, i) => _PhotoWorker(viewed[i]),
               ),
             ),

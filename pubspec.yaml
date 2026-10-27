@@ -1,14 +1,17 @@
-name: zambia_skillbridge
-description: Zambia SkillBridge. Learn. Build. Grow. A Flutter prototype that connects skilled Zambian workers with clients.
+name: skillbridge
+description: "SkillBridge connects skilled workers with clients. Show it, prove it, grow it."
 publish_to: 'none'
+
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: ^3.12.2
 
 dependencies:
   flutter:
     sdk: flutter
+
+  cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.5.1
   go_router: ^14.2.0
   shared_preferences: ^2.2.3
@@ -16,30 +19,66 @@ dependencies:
   path_provider: ^2.1.3
   connectivity_plus: ^6.0.5
   url_launcher: ^6.3.0
+  crypto: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
-  flutter_launcher_icons: ^0.14.1
+
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/icon/
-    - assets/trades/
-    - assets/people/
-    - assets/portfolio/
-    - assets/banners/
-    - assets/onboarding/
-  fonts:
-    - family: Playfair
-      fonts:
-        - asset: assets/fonts/PlayfairDisplay.ttf
 
+  assets:
+    - assets/branding/
+    - assets/people/
+    - assets/trades/
+    - assets/banners/
+    - assets/portfolio/
+    - assets/onboarding/
+
+  fonts:
+    - family: Jakarta
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/PlusJakartaSans-ExtraBold.ttf
+          weight: 800
+
+# App launcher icon (generated with: dart run flutter_launcher_icons).
 flutter_launcher_icons:
   android: true
-  ios: false
-  image_path: "assets/icon/icon.png"
-  adaptive_icon_background: "#24364B"
-  adaptive_icon_foreground: "assets/icon/icon_fg.png"
+  ios: true
+  image_path: "assets/branding/app_icon.png"
+  remove_alpha_ios: true
+  adaptive_icon_background: "#0B2447"
+  adaptive_icon_foreground: "assets/branding/app_icon_foreground.png"
+  web:
+    generate: true
+    image_path: "assets/branding/app_icon.png"
+    background_color: "#0B2447"
+    theme_color: "#0B2447"
+
+# Native splash screen (generated with: dart run flutter_native_splash:create).
+flutter_native_splash:
+  color: "#0B2447"
+  image: assets/branding/splash_logo.png
+  color_dark: "#061630"
+  image_dark: assets/branding/splash_logo.png
+  android: true
+  ios: true
+  web: true
+  android_12:
+    color: "#0B2447"
+    image: assets/branding/splash_logo.png
+    color_dark: "#061630"
+    image_dark: assets/branding/splash_logo.png
