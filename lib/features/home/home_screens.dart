@@ -514,15 +514,33 @@ class _BellButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final n = ref.watch(appProvider.select((s) => s.unreadNotifications));
     return Tooltip(
-      message: 'Notifications, $n unread',
+      message: n == 0 ? 'Notifications' : 'Notifications, $n unread',
       child: InkWell(
         customBorder: const CircleBorder(),
         onTap: () => context.push('/notifications'),
         child: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, border: Border.all(color: SB.border)),
-          child: Badge(label: Text('$n'), isLabelVisible: n > 0, child: const Icon(Icons.notifications_none, size: 24)),
+          width: 46,
+          height: 46,
+          // Centre the Badge itself. `Badge` wraps its child in a Stack that
+          // otherwise aligns the icon to the top-start and pushes the bell
+          // off-centre.
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: SB.border),
+          ),
+          child: Badge.count(
+            count: n,
+            isLabelVisible: n > 0,
+            backgroundColor: SB.error,
+            textColor: Colors.white,
+            child: const Icon(
+              Icons.notifications_none_rounded,
+              size: 23,
+              color: SB.navy,
+            ),
+          ),
         ),
       ),
     );
